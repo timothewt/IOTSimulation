@@ -10,6 +10,7 @@
 
 #include "iostream"
 #include "fstream"
+#include "Package.hpp"
 
 class Server
 {
@@ -40,7 +41,7 @@ private:
 	 * @param time time of the measure
 	 */
 	template<typename T>
-	void consoleWrite(std::string sensor, std::string unit, T measure, long time);
+	void consoleWrite(const std::string& sensor, T measure, const std::string& unit, long time);
 	/**
 	 * @brief Writes the measure of one sensor in the corresponding log file
 	 * @tparam T type of return of the sensor
@@ -50,7 +51,7 @@ private:
 	 * @param time time of the measure
 	 */
 	template<typename T>
-	void fileWrite(std::string sensor, std::string unit, T value, long time);
+	void fileWrite(const std::string& sensor, T value, const std::string& unit, long time);
 
 public:
 	/**
@@ -71,13 +72,11 @@ public:
 	/**
 	 * @brief Receives data from a single sensor
 	 * @tparam T type of return of the sensor
-	 * @param sensor type of sensor (temperature, humidity, light, pressure)
-	 * @param measure measure of the sensor
-	 * @param unit unit of the measure
+	 * @param dataPackage package containing the sensor's name, the data and the unit of the data
 	 * @param time time of the measure
 	 */
 	template<typename T>
-	void DataReceive(std::string sensor, std::string unit, T measure, long time);
+	void DataReceive(Package<T> dataPackage, long time);
 
 	/**
 	 * @brief Toggles the console log to true or false
@@ -92,29 +91,29 @@ public:
 // Template functions have to be declared in the header of the class
 
 template<typename T>
-void Server::consoleWrite(std::string sensor, std::string unit, T measure, long time)
+void Server::consoleWrite(const std::string& sensor, T measure, const std::string& unit, long time)
 {
 	std::cout << time << "s | " << sensor << " : " << measure << unit << std::endl;
 }
 
 template<typename T>
-void Server::fileWrite(std::string sensor, std::string unit, T value, long time)
+void Server::fileWrite(const std::string& sensor, T value, const std::string& unit, long time)
 {
-	std::ofstream logFile("logs/" + sensor + "Log.txt", std::fstream::app); // opens the corresponding log file
-	logFile << time << "s | Value: " << value << unit << "," << std::endl; // writes in the file
+	std::ofstream logFile("logs/" + sensor + "Log.csv", std::fstream::app); // opens the corresponding log file
+	logFile << time << "s," << value << "," << unit << "," << std::endl; // writes in the file
 	logFile.close();
 }
 
 template<typename T>
-void Server::DataReceive(std::string sensor, std::string unit, T measure, long time)
+void Server::DataReceive(Package<T> dataPackage, long time)
 {
 	if (m_consoleActivation)
 	{
-		consoleWrite(sensor, unit, measure, time);
+		consoleWrite(dataPackage.getName(), dataPackage.getData(), dataPackage.getUnit(), time);
 	}
 	if (m_logActivation)
 	{
-		fileWrite(sensor, unit, measure, time);
+		fileWrite(dataPackage.getName(), dataPackage.getData(), dataPackage.getUnit(), time);
 	}
 }
 

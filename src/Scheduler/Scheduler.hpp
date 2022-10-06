@@ -18,6 +18,7 @@
 #include "../Sensors/Humidity.hpp"
 #include "../Sensors/Light.hpp"
 #include "../Sensors/Pressure.hpp"
+#include "../Server/Package.hpp"
 
 class Scheduler
 {
@@ -64,7 +65,7 @@ public:
 	 * @param simDuration duration of the simulation
 	 */
 	template<typename T>
-	void startSensorTransmission(Sensor<T> sensor, long simDuration);
+	void startSensorTransmission(Sensor<T>* sensor, long simDuration);
 	/**
 	 * @brief Puts the thread to sleep for t milliseconds
 	 * @param t time to sleep in milliseconds
@@ -73,12 +74,14 @@ public:
 };
 
 template<typename T>
-void Scheduler::startSensorTransmission(Sensor<T> sensor, long simDuration)
+void Scheduler::startSensorTransmission(Sensor<T>* sensor, long simDuration)
 {
 	while(m_clock.getTime() <= simDuration) // Loops until the simulation duration is over
 	{
-		m_server.DataReceive(sensor.getName(), sensor.getUnit(), sensor.getData(), m_clock.getTime()); // sends the data to the server
-		std::this_thread::sleep_for(std::chrono::seconds(sensor.getMeasurePeriod())); // Puts the thread to sleep until the next measure
+		Package<T>* dataPackage = new Package<T>(sensor->getName(), sensor->getData(), sensor->getUnit());
+		m_server.DataReceive(*dataPackage, m_clock.getTime()); // sends the data to the server
+		delete dataPackage;
+		std::this_thread::sleep_for(std::chrono::seconds(sensor->getMeasurePeriod())); // Puts the thread to sleep until the next measure
 	}
 }
 

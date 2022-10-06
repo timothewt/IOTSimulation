@@ -27,13 +27,13 @@ void Scheduler::LaunchScheduler()
 
 	// The program uses a thread per sensor, therefore it just has to put to sleep one thread between each measure for each sensor
 	std::thread threads[4];
-	threads[0] = std::thread(&Scheduler::startSensorTransmission<float>, this, m_temperatureSensor, simDuration);
+	threads[0] = std::thread(&Scheduler::startSensorTransmission<float>, this, &m_temperatureSensor, simDuration);
 	sleepForMs(100);	// Adding delay between threads, otherwise the console prints intertwine
-	threads[1] = std::thread(&Scheduler::startSensorTransmission<float>, this, m_humiditySensor, simDuration);
+	threads[1] = std::thread(&Scheduler::startSensorTransmission<float>, this, &m_humiditySensor, simDuration);
 	sleepForMs(100);
-	threads[2] = std::thread(&Scheduler::startSensorTransmission<bool>, this, m_lightSensor, simDuration);
+	threads[2] = std::thread(&Scheduler::startSensorTransmission<bool>, this, &m_lightSensor, simDuration);
 	sleepForMs(100);
-	threads[3] = std::thread(&Scheduler::startSensorTransmission<int>, this, m_pressureSensor, simDuration);
+	threads[3] = std::thread(&Scheduler::startSensorTransmission<int>, this, &m_pressureSensor, simDuration);
 
 	for (int i = 0; i < 4; ++i) {
 		threads[i].join();
@@ -80,6 +80,6 @@ void Scheduler::RetrieveAllData()
 {
 	m_measures[0] = m_temperatureSensor.getData();
 	m_measures[1] = m_humiditySensor.getData();
-	m_measures[2] = m_lightSensor.getData();
-	m_measures[3] = m_pressureSensor.getData();
+	m_measures[2] = static_cast<float>(m_lightSensor.getData());
+	m_measures[3] = static_cast<float>(m_pressureSensor.getData());
 }

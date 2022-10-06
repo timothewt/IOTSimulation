@@ -13,22 +13,21 @@
 
 class Pressure : public Sensor<int>
 {
-private:
-	/**
-	 * @brief Generates a random int between min and max, overwrites the method of the Sensor class to return an int
-	 */
-	int generateRandomValue(int min, int max);
 public:
 	/**
 	 * @brief Default constructor
 	 */
 	Pressure();
-
 	/**
-	 * @brief Retrieves data from the sensor, overwrites the method of the Sensor class to return an int
-	 * @return the value of the sensor
+	 * generates a random integer between min and max
+	 * @param min minimum value
+	 * @param max maximum value
+	 * @return a random integer in |[min, max]|
 	 */
-	int getData();
+	int generateRandomValue(int min, int max) override
+	{
+		return std::rand() % static_cast <int>(max - min) + min;
+	}
 };
 
 #endif //AP4A_PRESSURE_HPP

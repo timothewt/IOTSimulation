@@ -16,12 +16,3 @@ Pressure::Pressure()
 	this->m_name = "pressure";
 }
 
-int Pressure::generateRandomValue(int min, int max)
-{
-	return std::rand() % (max - min) + min;
-}
-
-int Pressure::getData()
-{
-	return this->generateRandomValue(this->m_minValue, this->m_maxValue);
-}

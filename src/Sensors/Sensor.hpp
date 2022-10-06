@@ -27,7 +27,7 @@ protected:
 	 * @param max maximum value
 	 * @return a random float between min and max
 	 */
-	T generateRandomValue(float min, float max);
+	virtual T generateRandomValue(T min, T max);
 public:
 	/**
 	 * @brief Orthodox canonical form constructors, destructor and affectation
@@ -77,11 +77,6 @@ template<typename T> Sensor<T>::~Sensor<T>() = default;
 template<typename T> Sensor<T>& Sensor<T>::operator=(const Sensor<T> &sensor) = default;
 
 template<typename T>
-T Sensor<T>::generateRandomValue(float min, float max)
-{
-	return static_cast <float> (std::rand() % static_cast <int>(floor(max - min) * 100)) / 100 + min;
-}
-template<typename T>
 T Sensor<T>::getData()
 {
 	return this->generateRandomValue(this->m_minValue, this->m_maxValue);
@@ -103,6 +98,11 @@ template<typename T>
 std::string Sensor<T>::getName()
 {
 	return this->m_name;
+}
+
+template<typename T>
+T Sensor<T>::generateRandomValue(T min, T max) {
+	return static_cast<T> (std::rand() % static_cast <int>(floor(max - min) * 100)) / 100 + min;;
 }
 
 #endif //AP4A_SENSOR_HPP

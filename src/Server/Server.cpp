@@ -23,19 +23,19 @@ Server& Server::operator=(const Server& server) = default;
 void Server::consoleWrite(float measures[4], std::string units[4], long time)
 {
 	std::cout << time << "s | Temperature: " << measures[0] << units[0] <<
-												" | Humidity: " << measures[1] << units[1] <<
-												" | Light: " << measures[2] << units[2] <<
-												" | Pressure: " << measures[3] << units[3] << "," << std::endl;
+						" | Humidity: " << measures[1] << units[1] <<
+						" | Light: " << measures[2] << units[2] <<
+						" | Pressure: " << measures[3] << units[3] << "," << std::endl;
 }
 
 
 void Server::fileWrite(float measures[4], std::string units[4], long time)
 {
-	std::ofstream logFile("logs/mainLog.txt", std::fstream::app);
-	logFile << time << "s | Temperature: " << measures[0] << units[0] <<
-											" | Humidity: " << measures[1] << units[1] <<
-											" | Light: " << measures[2] << units[2] <<
-											" | Pressure: " << measures[3] << units[3] << "," << std::endl;
+	std::ofstream logFile("logs/mainLog.csv", std::fstream::app);
+	logFile << time << "s,Temperature," << measures[0] << "," << units[0] <<
+						",Humidity," << measures[1] << "," << units[1] <<
+						",Light," << measures[2] << "," << units[2] <<
+						",Pressure," << measures[3] << "," << units[3] << "," << std::endl;
 	logFile.close();
 }
 

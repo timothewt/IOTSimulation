@@ -13,22 +13,21 @@
 
 class Light : public Sensor<bool>
 {
-private:
-	/**
-	 * @brief Generates a random boolean (true or false), overwrites the method of the Sensor class to return a boolean
-	 */
-	bool generateRandomValue();
 public:
 	/**
 	 * @brief Default constructor
 	 */
 	Light();
-
 	/**
-	 * @brief Retrieves data from the sensor, overwrites the method of the Sensor class to return a boolean
-	 * @return the value of the sensor
+	 * generates a random boolean
+	 * @param min minimum value
+	 * @param max maximum value
+	 * @return a random boolean, true or false
 	 */
-	bool getData();
+	bool generateRandomValue(bool min, bool max) override
+	{
+		return std::rand() % 2;
+	}
 };
 
 #endif //AP4A_LIGHT_HPP
